@@ -1,7 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 
-bad_values = [220, 254, 255]
+bad_values = [221, 222, 249]
 
 def simulate_room(start_value, num_generators, room_time):
     byte_value = start_value    
@@ -30,7 +30,7 @@ def calculate_probabilities(start_value, room_times, num_generators_list, num_si
 
 # Example values
 start_value = 71
-room_times = [18.16, 50.68, 80.27]  # Times for each room
+room_times = [19.37, 53.48, 98.65]  # Times for each room
 num_generators_list = [8, 5, 6]  # Number of generators per room
 
 
@@ -38,9 +38,9 @@ end_values_count, probabilities, total_probability = calculate_probabilities(sta
 
 # Descriptions for each byte value
 descriptions = {
-    220: "bucket softlock",
-    254: "first spinner softlock",
-    255: "second spinner softlock"
+    249: "bucket softlock",
+    221: "first spinner softlock",
+    222: "second spinner softlock"
 }
 
 # Print probabilities with descriptions
