@@ -1,6 +1,8 @@
 import random
 import matplotlib.pyplot as plt
 
+bad_values = [220, 254, 255]
+
 def simulate_room(start_value, num_generators, room_time):
     byte_value = start_value
     for _ in range(room_time):
@@ -20,7 +22,7 @@ def calculate_probabilities(start_value, room_times, num_generators_list, num_si
         end_values_count[byte_value] += 1
 
     probabilities = {value: (count / num_simulations) * 100 for value, count in end_values_count.items()}
-    total_probability = sum(probabilities.get(k, 0) for k in [220, 254, 255])
+    total_probability = sum(probabilities.get(k, 0) for k in bad_values)
     return end_values_count, probabilities, total_probability
 
 # Example values
@@ -32,7 +34,7 @@ end_values_count, probabilities, total_probability = calculate_probabilities(sta
 
 # Descriptions for each byte value
 descriptions = {
-    104: "bucket softlock",
+    220: "bucket softlock",
     254: "first spinner softlock",
     255: "second spinner softlock"
 }
@@ -41,7 +43,7 @@ descriptions = {
 print("Probabilities for each byte value:")
 print("{:<26} {:<10}".format("Description", "Chance(%)"))
 print("-" * 35)
-for value in [104, 254, 255]:
+for value in bad_values:
     description = descriptions.get(value, "Unknown")
     probability = probabilities[value]
     print("{:<29} {:<1.2f}%".format(description, probability))
