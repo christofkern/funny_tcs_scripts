@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 def simulate_room(start_value, num_generators, room_time):
     byte_value = start_value
@@ -9,27 +10,25 @@ def simulate_room(start_value, num_generators, room_time):
     return byte_value
 
 def calculate_probabilities(start_value, room_times, num_generators_list, num_simulations=25000):
-    end_values_count = {104: 0, 254: 0, 255: 0}
+    end_values_count = {i: 0 for i in range(256)}  # Initialize counts for all byte values
 
     for _ in range(num_simulations):
         byte_value = start_value
         for num_generators, room_time in zip(num_generators_list, room_times):
             byte_value = simulate_room(byte_value, num_generators, room_time)
         
-        if byte_value in end_values_count:
-            end_values_count[byte_value] += 1
+        end_values_count[byte_value] += 1
 
-    total_simulations = num_simulations
-    probabilities = {value: (count / total_simulations) * 100 for value, count in end_values_count.items()}
-    total_probability = sum(probabilities.values())
-    return probabilities, total_probability
+    probabilities = {value: (count / num_simulations) * 100 for value, count in end_values_count.items()}
+    total_probability = sum(probabilities.get(k, 0) for k in [104, 254, 255])
+    return end_values_count, probabilities, total_probability
 
 # Example values
 start_value = 100
 room_times = [40, 30, 30]  # Times for each room
-num_generators_list = [7, 8, 7]  # Number of generators per room
+num_generators_list = [7, 7, 8]  # Number of generators per room
 
-probabilities, total_probability = calculate_probabilities(start_value, room_times, num_generators_list)
+end_values_count, probabilities, total_probability = calculate_probabilities(start_value, room_times, num_generators_list)
 
 # Descriptions for each byte value
 descriptions = {
@@ -42,8 +41,21 @@ descriptions = {
 print("Probabilities for each byte value:")
 print("{:<26} {:<10}".format("Description", "Chance(%)"))
 print("-" * 35)
-for value, probability in probabilities.items():
+for value in [104, 254, 255]:
     description = descriptions.get(value, "Unknown")
+    probability = probabilities[value]
     print("{:<29} {:<1.2f}%".format(description, probability))
 print("-" * 35)
 print("{:<29} {:<1.2f}%".format("Total probability", total_probability))
+
+# Plotting the distribution of the byte values
+values = list(probabilities.keys())
+percentages = list(probabilities.values())
+
+colors = ['red' if 220 <= value <= 250 else 'blue' for value in values]
+
+plt.bar(values, percentages, color=colors, width=1.2)
+plt.xlabel('Byte Value')
+plt.ylabel('Percentage (%)')
+plt.title('Distribution of Byte Values After Simulations')
+plt.show()
