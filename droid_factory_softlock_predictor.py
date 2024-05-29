@@ -20,7 +20,7 @@ def calculate_probabilities(start_value, room_times, num_generators_list, num_si
         end_values_count[byte_value] += 1
 
     probabilities = {value: (count / num_simulations) * 100 for value, count in end_values_count.items()}
-    total_probability = sum(probabilities.get(k, 0) for k in [104, 254, 255])
+    total_probability = sum(probabilities.get(k, 0) for k in [220, 254, 255])
     return end_values_count, probabilities, total_probability
 
 # Example values
